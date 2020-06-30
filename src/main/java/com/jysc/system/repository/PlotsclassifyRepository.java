@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PlotsclassifyRepository extends CrudRepository<Plotsclassify, Integer>, JpaSpecificationExecutor<Plotsclassify> {
     public List<Plotsclassify> findByPoid(Integer poid);
+    public Plotsclassify findByPcname(String pcname);
 }

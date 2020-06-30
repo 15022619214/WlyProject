@@ -306,7 +306,14 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
                     $scope.getIsOpenPlots(poid)
 	    			$scope.closepc()
 	            },2000)
-    		}
+    		}else if(res.data['info'] == "error"){
+                $scope.sys_ifnos = "已存在该分类";
+                $("#sys_info").modal('toggle');
+                $timeout(function(){
+                    $("#sys_info").modal('hide');
+                    $scope.closepc()
+                },2000)
+            }
     	})
     }
     

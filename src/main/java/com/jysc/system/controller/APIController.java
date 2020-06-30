@@ -276,14 +276,16 @@ public class APIController extends BaseController{
     public JSONObject saveplotsClassify(@RequestParam("poid") int poid,
     		@RequestParam("pcname") String pcname) {
     	JSONObject json = new JSONObject();
-    	
-    	Plotsclassify plotsclassify = new Plotsclassify();
-    	plotsclassify.setPcname(pcname);
-    	plotsclassify.setPoid(poid);
-    	this.plotsclassifyService.save(plotsclassify);
-    	
-    	json.put("info", "success");
-    	
+        Plotsclassify ishave = this.plotsclassifyService.findByPcname(pcname);
+        if(ishave == null){
+            Plotsclassify plotsclassify = new Plotsclassify();
+            plotsclassify.setPcname(pcname);
+            plotsclassify.setPoid(poid);
+            this.plotsclassifyService.save(plotsclassify);
+            json.put("info", "success");
+        }else{
+            json.put("info", "error");
+        }
     	return json;
     }
     

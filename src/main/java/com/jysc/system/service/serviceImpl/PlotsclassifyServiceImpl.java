@@ -34,4 +34,9 @@ public class PlotsclassifyServiceImpl implements PlotsclassifyService {
 	public Plotsclassify findById(Integer id) {
 		return this.plotsclassifyRepository.findById(id).get();
 	}
+
+    @Override
+    public Plotsclassify findByPcname(String pcname) {
+        return this.plotsclassifyRepository.findByPcname(pcname);
+    }
 }
