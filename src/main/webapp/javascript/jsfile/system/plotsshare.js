@@ -13,7 +13,7 @@ A.controller("plotsshareController", ["$scope", "$http", "$timeout", function ($
             $scope.pobjects = res.data.Plotsobjects_info
             $timeout(function(){
                 $(".loading2").addClass("invisible")
-            },5000)
+            },1000)
         })
     }
 
