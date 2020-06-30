@@ -3,6 +3,9 @@ A.controller("plotsadminController", ["$scope", "$http", "$timeout","$filter", f
 	$scope.poimgurl = "https://timgsa.baidu.com/timg?" +
 			"image&quality=80&size=b9999_10000&sec=1590575902495&di=8cc673ddf8885733c229e73917d174db&imgtype=0" +
 			"&src=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D384725901%2C2537931323%26fm%3D214%26gp%3D0.jpg"
+    $scope.poimgurllogo = "https://timgsa.baidu.com/timg?" +
+        "image&quality=80&size=b9999_10000&sec=1590575902495&di=8cc673ddf8885733c229e73917d174db&imgtype=0" +
+        "&src=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D384725901%2C2537931323%26fm%3D214%26gp%3D0.jpg"
     var _editor;
     var _editorlogo;
     $(function () {
@@ -18,7 +21,6 @@ A.controller("plotsadminController", ["$scope", "$http", "$timeout","$filter", f
                 name:name
             }
         }).then(function (res) {
-            console.log(res.data)
             $scope.Plotsobjects_info = res.data.Plotsobjects_info
             $timeout(function(){
                 $(".loading").addClass("invisible")
@@ -175,7 +177,6 @@ A.controller("plotsadminController", ["$scope", "$http", "$timeout","$filter", f
     }
     
 	$scope.pencilplots = function(item){
-		console.log(item)
 		$scope.indexedit = 0;
 		$scope.itemid = item.id
 		$scope.poname = item.poname
