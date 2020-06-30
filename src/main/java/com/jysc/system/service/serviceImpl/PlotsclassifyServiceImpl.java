@@ -36,7 +36,9 @@ public class PlotsclassifyServiceImpl implements PlotsclassifyService {
 	}
 
     @Override
-    public Plotsclassify findByPcname(String pcname) {
-        return this.plotsclassifyRepository.findByPcname(pcname);
+    public Plotsclassify findByPcnameAndPoid(String pcname, Integer poid) {
+        return this.plotsclassifyRepository.findByPcnameAndPoid(pcname, poid);
     }
+
+
 }

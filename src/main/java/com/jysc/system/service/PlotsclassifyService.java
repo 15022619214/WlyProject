@@ -9,5 +9,5 @@ public interface PlotsclassifyService {
     public void del(Integer id);
     public Plotsclassify save(Plotsclassify plotsclassify);
     public Plotsclassify findById(Integer id);
-    public Plotsclassify findByPcname(String pcname);
+    public Plotsclassify findByPcnameAndPoid(String pcname,Integer poid);
 }
