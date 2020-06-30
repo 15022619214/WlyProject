@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::wly_head(title='后台管理')"></head>
+<link th:href="@{/ueditor/themes/default/css/ueditor.css}" rel="stylesheet" type="text/css" />
+<script th:src="@{/ueditor/ueditor.config.js}" type="text/javascript"></script>
+<script th:src="@{/ueditor/ueditor.all.js}" type="text/javascript"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}" type="text/javascript"></script>
+<body ng-app="Angular" ng-controller="plotsadminController" style="padding: 40px 10px 0px 10px">
+<div class="container-fluid">
+    <div th:include="common::nav"></div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white mb-0">
+            <li class="breadcrumb-item font-14"><i class="fa fa-th-large"></i>&nbsp;开发项目</li>
+        </ol>
+    </nav>
+    <div class="input-group col-md-3 p-0">
+        <input type="text" class="form-control" placeholder="项目查询" ng-model="searchPoname"/>
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" ng-click="search(searchPoname)"><i class="fa fa-search"></i>&nbsp;查询</button>
+            <button class="btn btn-outline-warning" type="button" ng-click="refresh()"><i class="fa fa-refresh"></i>&nbsp;重置</button>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-xl-2 col-md-2"
+             th:if="${session.SPRING_SECURITY_CONTEXT!=null and #strings.contains(session.SPRING_SECURITY_CONTEXT.Authentication.Authorities,'管理员')}">
+            <div class="card h-100 border-0" style="background-color: rgba(0,0,0,0.1); cursor: pointer" ng-click="indexinfo()">
+                <div class="card-body text-center">
+                    <i class="fa fa-plus-square" style="font-size: 100px; line-height: 300px"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-2" ng-repeat="info in Plotsobjects_info|orderBy:isOpen">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-dark">
+                    <div class="btn-group float-right">
+                        <button type="button" class="btn  btn-outline-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-cog"></i>&nbsp;操作
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <button class="dropdown-item" type="button" ng-click="pencilplots(info)"
+                                    th:if="${session.SPRING_SECURITY_CONTEXT!=null and #strings.contains(session.SPRING_SECURITY_CONTEXT.Authentication.Authorities,'管理员')}"><i class="fa fa-pencil-square-o"></i>&nbsp;修改项目信息</button>
+                            <button ng-if="info.isOpen == 0" class="dropdown-item" type="button" ng-click="isopens(info.id, 1)"
+                                    th:if="${session.SPRING_SECURITY_CONTEXT!=null and #strings.contains(session.SPRING_SECURITY_CONTEXT.Authentication.Authorities,'管理员')}"><i class="fa fa-check"></i>&nbsp;启用</button>
+                            <button ng-if="info.isOpen == 1" class="dropdown-item" type="button" ng-click="isopens(info.id, 0)"
+                                    th:if="${session.SPRING_SECURITY_CONTEXT!=null and #strings.contains(session.SPRING_SECURITY_CONTEXT.Authentication.Authorities,'管理员')}"><i class="fa fa-remove"></i>&nbsp;禁用</button>
+                            <button class="dropdown-item" type="button" ng-click="plusplots(info.id)"><i class="fa fa-plus"></i>&nbsp;地块信息【新增/修改】</button>
+                            <button class="dropdown-item text-danger" type="button" ng-click="trash(info.id, info.isOpen)"
+                                    th:if="${session.SPRING_SECURITY_CONTEXT!=null and #strings.contains(session.SPRING_SECURITY_CONTEXT.Authentication.Authorities,'管理员')}"><i class="fa fa-trash"></i>&nbsp;删除</button>
+                        </div>
+                    </div>
+                </div>
+                <img ng-src="[{info.poimgurl}]" class="card-img-top" alt="..." height="200px">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold" ng-bind="info.poname"></h5>
+                    <span>
+                    	<i class="fa fa-eye"></i>&nbsp;<span ng-bind="info.isOpen == 1 ? '已展示':'未展示' "></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style=" width:20px; position: relative; left:-9999999999px" >
+<input type="text" class="form-control" ng-model="poimgurlv"/>
+<input type="text" class="form-control" ng-model="poimgurlogo"/>
+</div>
+<script type="text/plain" id="upload_ue"></script>
+<script type="text/plain" id="upload_logo"></script>
+<div th:include="common::models"></div>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    document.write("<script type='text/javascript' src='/javascript/jsfile/system/plotsadmin.js?"+ Math.random() + "'></scr"+"ipt>");
+    /*]]>*/
+</script>
+</body>
+</html>
+
+

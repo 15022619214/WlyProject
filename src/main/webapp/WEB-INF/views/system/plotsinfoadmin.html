@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::wly_head(title='后台管理')"></head>
+<link th:href="@{/ueditor/themes/default/css/ueditor.css}" rel="stylesheet" type="text/css" />
+<script th:src="@{/ueditor/ueditor.config.js}" type="text/javascript"></script>
+<script th:src="@{/ueditor/ueditor.all.js}" type="text/javascript"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}" type="text/javascript"></script>
+<style>
+.embed-responsive{
+	height:451px
+}
+#showjsHtml img{
+    width: 100%;
+}
+</style>
+<body ng-app="Angular" ng-controller="plotsinfoadminController" style="padding: 40px 10px 0px 10px">
+<div class="container-fluid">
+    <div th:include="common::nav"></div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white mb-0">
+            <li class="breadcrumb-item font-14 active"><a th:href="@{/plotsadmin}"><i class="fa fa-th-large"></i>&nbsp;开发项目</a></li>
+            <li class="breadcrumb-item font-14"><i class="fa fa-plus"></i>&nbsp;地块添加</li>
+        </ol>
+    </nav>
+    <div>
+	  <div style="position: fixed; top:81px; left: 10px;">
+	    <div class="card shadow-sm border-0">
+		  <div class="card-header bg-dark">
+		 	 <div class="d-flex justify-content-between">
+			   	 <span class="font-weight-bold text-warning">
+			   	 	<i class="fa fa-navicon"></i>&nbsp;地块信息列表
+		   	 	</span>
+		   	 	<span style="cursor: pointer;" ng-click="addpc()" class="font-weight-bold text-warning">
+	            	<i class="fa fa-plus"></i>&nbsp;新增分类
+	            </span>
+            </div>
+		  </div>
+		  <div class="card-body p-0 scry Cardheight" style="width: 250px">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item" ng-repeat="i1 in Plotsobjects_info">
+                      <span style="color: #905f44;" class="font-15">
+                        <i class="fa fa-bars"></i>
+                        <span ng-bind="i1.Plotsclassify_name" class="font-weight-bold"></span>
+                        &nbsp;
+                        <span ng-click="editpc(i1)" style="cursor: pointer" class="text-success">
+                          <i class="fa fa-pencil-square-o"></i>
+                        </span>
+                          &nbsp;
+                        <span ng-click="trashpc(i1.Plotsclassify_id)" style="cursor: pointer" class="text-danger">
+                          <i class="fa fa-trash"></i>
+                        </span>
+                          &nbsp;
+                        <span ng-click="addpl(i1.Plotsclassify_id)" style="cursor: pointer;" class="text-warning">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                     </span>
+                      <ul class="list-group list-group-flush">
+                          <li class="list-group-item border-0" ng-repeat="i2 in i1.Plots_list">
+                              <a href="javascript:" class="text-secondary text-decoration-none font-14" ng-click="checkdots(i2.id, i2.plots)">
+                                  <div class="d-flex justify-content-between">
+                                    <span>
+                                        <i class="fa fa-location-arrow"></i>&nbsp;&nbsp;
+                                        <span ng-bind="i2.plots|cut:true:6:'..'"></span>
+                                         &nbsp;
+                                        <span ng-click="editpl(i2)" style="cursor: pointer" class="text-success">
+                                          <i class="fa fa-pencil-square-o"></i>
+                                        </span>
+                                        &nbsp;
+                                        <span ng-click="trashpl(i2.id)" style="cursor: pointer" class="text-danger">
+                                          <i class="fa fa-trash"></i>
+                                        </span>
+                                    </span>
+
+                                    <span ng-if="focus === i2.id">
+                                        <i class="fa fa-chevron-right"></i>
+                                    </span>
+                                  </div>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+		  </div>
+		</div>
+	  </div>
+	  <div style="position: fixed; top:81px; left: 260px; margin-left: 10px; margin-right: 10px">
+	    <div class="card shadow-sm border-0">
+		  <div class="card-header bg-dark">
+		 	 <div class="d-flex justify-content-between">
+			   	 <span class="font-weight-bold text-warning">
+			   	 	<i class="fa fa-navicon"></i>&nbsp;
+			   	 	<span ng-bind="editpcname"></span>
+		   	 	</span>
+		   	 	<span style="cursor: pointer;" ng-click="savePlotsinfo()" class="font-weight-bold text-warning">
+	            	<i class="fa fa-rss-square"></i>&nbsp;提交地块信息
+	            </span>
+            </div>
+		  </div>
+		  <div class="card-body scry Cardheight">
+              <div class="card mb-4 col-md-8">
+                  <div class="card-body">
+                      <label class="font-weight-bold">导航开关</label>
+                      <div class="d-flex justify-content-between">
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch1" ng-checked="navOnOff.UperMapCheack" ng-click="navCk(0, $event)">
+                              <label class="custom-control-label" for="customSwitch1">全景地图</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch2" ng-checked="navOnOff.PlotsYsCheack" ng-click="navCk(1, $event)">
+                              <label class="custom-control-label" for="customSwitch2">区位优势</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch3" ng-checked="navOnOff.PlotsJsCheack" ng-click="navCk(2, $event)">
+                              <label class="custom-control-label" for="customSwitch3">区位介绍</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch4" ng-checked="navOnOff.ServiceCheack" ng-click="navCk(3, $event)">
+                              <label class="custom-control-label" for="customSwitch4">服务</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch5" ng-checked="navOnOff.MapPainCheack" ng-click="navCk(4, $event)">
+                              <label class="custom-control-label" for="customSwitch5">地块定位</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch6" ng-checked="navOnOff.LetourCheack" ng-click="navCk(5, $event)">
+                              <label class="custom-control-label" for="customSwitch6">乐游</label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+			  <div class="row">
+				  <div class="col-md-6 mb-4" ng-show="navOnOff.UperMapCheack">
+					  <div class="card">
+						  <div class="row no-gutters">
+							  <div class="col-md-4 position-relative bg-secondary" style="height: 451px">
+								  <div class="btn-group-vertical btn-group-sm position-absolute" style="z-index: 2; top: 10px; left: 10px">
+									  <button type="button" class="btn btn-primary mb-2 btn-sm" ng-repeat="btn in mapMean" ng-if="btn.url != ''" ng-click="showUmap(btn.url)" style="border-radius: 20px">
+										  <span ng-bind="btn.kname"></span>
+									  </button>
+								  </div>
+								  <div class="embed-responsive embed-responsive-4by3">
+									  <iframe class="embed-responsive-item" ng-src="[{UperMapin}]" scrolling="no" id="uperMaps"></iframe>
+								  </div>
+							  </div>
+							  <div class="col-md-8">
+								  <div class="card-body">
+									  <div class="form-group">
+										  <label class="font-weight-bold">全景地图链接</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="map.allMap"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addUperMap(0, '全部', map.allMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeMap(0)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">全景地图链接【交通配套】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="map.trafficMap"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addUperMap(1, '交通配套', map.trafficMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeMap(1)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">全景地图链接【商业配套】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="map.businessMap"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addUperMap(2, '商业配套', map.businessMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeMap(2)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">全景地图链接【景观配套】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="map.landscapeMap"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addUperMap(3, '景观配套', map.landscapeMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeMap(3)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">全景地图链接【教育配套】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="map.educationMap"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addUperMap(4, '教育配套', map.educationMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeMap(4)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">全景地图链接【医疗配套】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="map.medicalMap"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addUperMap(5, '医疗配套', map.medicalMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeMap(5)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+				  <div class="col-md-6 mb-4" ng-show="navOnOff.PlotsYsCheack">
+					  <div class="card">
+						  <div class="row no-gutters">
+							  <div class="col-md-4 position-relative bg-secondary" style="height: 451px">
+                                  <div class="btn-group float-right position-absolute" style=" top: 10px; left: 10px; z-index:3">
+                                      <button type="button" class="btn  btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fa fa-cog"></i>&nbsp;固定背景操作
+                                      </button>
+                                      <div class="dropdown-menu dropdown-menu-left">
+                                          <button class="dropdown-item" type="button" style=" top: 10px; left: 10px; z-index:3" ng-click="addYstipImg()"><i class="fa fa-plus"></i>&nbsp;添加固定背景</button>
+                                          <button class="dropdown-item" type="button" style=" top: 10px; left: 10px; z-index:3" ng-click="removeYstipImg()"><i class="fa fa-remove"></i>&nbsp;移除</button>
+                                      </div>
+                                  </div>
+                                  <img ng-src="[{img.tipImg}]" alt="" class="w-100" height="451px" style="position: absolute; z-index: 0" ng-show="img.tipImg != ''">
+								  <div id="My_carousel" class="carousel slide carousel-vertical" data-ride="carousel" ng-hide="actindex === -1">
+                                      <div class="btn-group-vertical btn-group-sm position-absolute" style="z-index: 2; bottom: 10px; right: 10px">
+                                          <button type="button" class="btn btn-success mb-2 btn-sm" ng-repeat="btn in imgMean" ng-if="btn.url != ''"  data-target="#My_carousel" data-slide-to="[{btn.index}]" style="border-radius: 20px">
+                                              <span ng-bind="btn.kname"></span>
+                                          </button>
+                                      </div>
+									  <div class="carousel-inner">
+										  <div class="carousel-item" ng-repeat="img in imgMean track by $index" ng-class="{active: $index === actindex}" ng-if="img.url != ''">
+											  <img ng-src="[{img.url}]" alt="" class="w-100" height="451px">
+										  </div>
+									  </div>
+								  </div>
+							  </div>
+							  <div class="col-md-8">
+								  <div class="card-body">
+									  <div class="form-group">
+										  <label class="font-weight-bold">区位优势【交通】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="img.trafficImg"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addYsImg(0)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeImg(0)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">区位优势【轨道】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="img.orbitalImg"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addYsImg(1)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeImg(1)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">区位优势【商业】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="img.businessImg"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addYsImg(2)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeImg(2)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">区位优势【教育】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="img.educationImg"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addYsImg(3)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeImg(3)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">区位优势【医疗】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="img.medicalImg"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addYsImg(4)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeImg(4)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="form-group">
+										  <label class="font-weight-bold">区位优势【景观】</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="img.landscapeImg"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="addYsImg(5)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+												  <button class="btn btn-outline-danger" type="button" ng-click="removeImg(5)"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+
+				  <div class="col-md-6 mb-4" ng-show="navOnOff.PlotsJsCheack">
+					  <div class="card">
+						  <div class="row no-gutters">
+							  <div class="col-md-4 bg-secondary" style="height: 451px">
+								  <div ng-bind-html="showjsHtml" class="bg-white scry" style="height: 451px" id="showjsHtml" ng-if="showHtml"></div>
+							  </div>
+							  <div class="col-md-8">
+								  <div class="card-body">
+									  <div class="form-group">
+										  <label class="font-weight-bold">地块介绍</label>
+                                          <script type="text/plain"  id="myplotsjsEditor"></script>
+                                          <div class="btn-group w-100 btn-group-sm" role="group">
+                                              <button class="btn btn-outline-success" type="button" ng-click="upImagejs()"><i class="fa fa-plus"></i>&nbsp;添加</button>
+                                              <button class="btn btn-outline-danger" type="button" ng-click="removejs()"><i class="fa fa-remove"></i>&nbsp;移除</button>
+                                          </div>
+									  </div>
+								  </div>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+
+                  <div class="col-md-6 mb-4" ng-show="navOnOff.ServiceCheack">
+                      <div class="card">
+                          <div class="card-body" style="height: 451px">
+                              <div class="d-flex justify-content-between">
+                                  <label class="font-weight-bold">服务:<span ng-bind="Plotsinfoservice_name"></span></label>
+                                  <div>
+                                      <span style="cursor: pointer;" ng-click="addSerTop()" class="font-weight-bold text-warning">
+                                            <i class="fa fa- fa-pencil-square-o"></i>&nbsp;顶部标题
+                                      </span>
+                                      &nbsp;&nbsp;
+                                      <span style="cursor: pointer;" ng-click="addService()" class="font-weight-bold text-warning">
+                                            <i class="fa fa-plus"></i>&nbsp;新增服务
+                                        </span>
+                                  </div>
+                              </div>
+                              <table class="table table_top_title table-bordered table-sm">
+                                  <thead class="thead-light">
+                                      <tr>
+                                          <th>服务</th>
+                                          <th width="10%">分类</th>
+                                          <th width="15%">操作</th>
+                                      </tr>
+                                  </thead>
+                              </table>
+                              <div style="height: 360px;" class="scry">
+                                  <table class="table table_in_content table-bordered table-sm">
+                                      <tbody>
+                                          <tr ng-repeat="i in Plotsinfoservice_list">
+                                              <td ng-bind="i.sertitle|cut:true:30:'...'"></td>
+                                              <td ng-bind="i.sertype" width="10%"></td>
+                                              <td width="15%">
+                                                  <div class="d-flex justify-content-between">
+                                                    <span>
+                                                        <span ng-click="editser(i)" style="cursor: pointer" class="text-success">
+                                                          <i class="fa fa-pencil-square-o"></i>
+                                                        </span>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <span ng-click="trashser(i.id)" style="cursor: pointer" class="text-danger">
+                                                          <i class="fa fa-trash"></i>
+                                                        </span>
+                                                    </span>
+                                                  </div>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+				  <div class="col-md-6 mb-4" ng-show="navOnOff.MapPainCheack">
+					  <div class="card">
+						  <div class="row no-gutters">
+							  <div class="col-md-4 bg-secondary" style="height: 451px">
+								  <div class="embed-responsive embed-responsive-4by3">
+									  <iframe class="embed-responsive-item" ng-src="[{pain.painUrl}]" scrolling="no" id="mapPain"></iframe>
+								  </div>
+							  </div>
+							  <div class="col-md-8">
+								  <div class="card-body">
+									  <div class="form-group">
+										  <label class="font-weight-bold">地块定位</label>
+										  <div class="input-group">
+											  <input type="text" class="form-control" ng-model="pain.PainMap" placeholder="示例：衡阳市罗公坪"/>
+											  <div class="input-group-append">
+												  <button class="btn btn-outline-success" type="button" ng-click="editPain(pain.PainMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+                                                  <button class="btn btn-outline-warning" type="button" ng-click="handPain()"><i class="fa fa-plus"></i>&nbsp;手动地位</button>
+                                                  <button class="btn btn-outline-danger" type="button" ng-click="removePain()"><i class="fa fa-remove"></i>&nbsp;移除</button>
+											  </div>
+										  </div>
+									  </div>
+                                      <div ng-if="pinBool" class="text-danger"><i class="fa fa-warning "></i>&nbsp;<span ng-bind="pinInfo"></span></div>
+								  </div>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+
+                  <div class="col-md-6 mb-4" ng-show="navOnOff.LetourCheack">
+                      <div class="card">
+                          <div class="row no-gutters">
+                              <div class="col-md-4 bg-secondary" style="height: 451px">
+                                  <div class="embed-responsive embed-responsive-4by3">
+                                      <iframe class="embed-responsive-item" ng-src="[{tour.letourMapurl}]" scrolling="no" id="letourmap"></iframe>
+                                  </div>
+                              </div>
+                              <div class="col-md-8">
+                                  <div class="card-body">
+                                      <div class="form-group">
+                                          <label class="font-weight-bold">乐游</label>
+                                          <div class="input-group">
+                                              <input type="text" class="form-control" ng-model="tour.letourMap"/>
+                                              <div class="input-group-append">
+                                                  <button class="btn btn-outline-success" type="button" ng-click="editLetour(tour.letourMap)"><i class="fa fa-plus"></i>&nbsp;添加</button>
+                                                  <button class="btn btn-outline-danger" type="button" ng-click="removeLetour()"><i class="fa fa-remove"></i>&nbsp;移除</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+			  </div>
+		  </div>
+		</div>
+	  </div>
+    </div>
+</div>
+<div style=" width:20px; position: relative; left:-9999999999px" >
+	<input type="text" class="form-control" ng-model="pain.PainMapurl"/>
+    <input type="text" class="form-control" ng-model="img.tipImg"/>
+</div>
+<!--初始化区位优势上传插件-->
+<script type="text/plain" id="trafficImg_ys"></script>
+<script type="text/plain" id="orbitalImg_ys"></script>
+<script type="text/plain" id="businessImg_ys"></script>
+<script type="text/plain" id="educationImg_ys"></script>
+<script type="text/plain" id="medicalImg_ys"></script>
+<script type="text/plain" id="landscapeImg_ys"></script>
+<script type="text/plain" id="tipImg_ys"></script>
+<!--初始化区位介绍上传插件-->
+<script type="text/plain" id="upload_js"></script>
+<div th:include="common::models"></div>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    document.write("<script type='text/javascript' src='/javascript/jsfile/system/plotsinfoadmin.js?"+ Math.random() + "'></scr"+"ipt>");
+    /*]]>*/
+</script>
+</body>
+</html>
+
+

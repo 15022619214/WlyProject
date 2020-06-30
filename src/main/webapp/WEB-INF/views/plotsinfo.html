@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::wly_head(title='')"></head>
+<body ng-app="Angular" ng-controller="plotsController">
+<div class="container-fluid">
+    <!--<nav class="navbar navbar-light d-flex justify-content-between shadow-sm bg-white fixed-top" id="navtop">
+        <a class="navbar-brand font-weight-bold font-15" href="#" style="color: #905f44;">
+           &lt;!&ndash; <i class="fa fa-location-arrow"></i>&nbsp;&nbsp;
+            <span ng-bind="plotsname|cut:true:8:'...'"></span>&ndash;&gt;
+        </a>
+    </nav>-->
+    <div class="tab-content">
+        <div class="tab-pane fade show active position-relative" id="plotsmap" role="tabpanel" aria-labelledby="nav-plotsmap-tab">
+            <a class="navbar-brand font-weight-bold font-30 position-absolute" href="#" style="color: #007bff;z-index: 2; top: 7px; right: 30px" ng-click="backs()">
+                <i class="fa fa-home"></i>
+            </a>
+            <div class="btn-group-vertical btn-group-sm position-absolute" style="z-index: 2; top: 20px; left: 10px">
+                <button type="button" class="btn btn-primary mb-2" ng-repeat="btn in mapMean" ng-if="btn.url != ''" ng-click="showUmap(btn.url)" style="border-radius: 20px">
+                    <span ng-bind="btn.kname"></span>
+                </button>
+            </div>
+            <div class="embed-responsive embed-responsive-4by3">
+                <iframe class="embed-responsive-item" ng-src="[{UperMapin}]" scrolling="no"></iframe>
+            </div>
+        </div>
+        <div class="tab-pane fade position-relative" id="plotsys" role="tabpanel" aria-labelledby="nav-plotsys-tab">
+            <div id="My_carousel" class="carousel slide carousel-vertical" data-ride="carousel">
+                <img ng-src="[{plosttipimg}]" alt="" class="w-100" height="[{imgheight}]" style="position: absolute; z-index: 0" ng-show="plosttipimg != ''">
+                <div class="btn-group-vertical btn-group-sm position-absolute" style="z-index: 2; bottom: 20px; right: 10px">
+                    <button type="button" class="btn btn-success mb-2" ng-repeat="btn in imgMean track by $index" ng-if="btn.url != ''" ng-class="{active: $index === 0}"  data-target="#My_carousel" data-slide-to="[{btn.index}]" id="[{btn.index}]"  style="border-radius: 20px">
+                        <i class="fa fa-bus" ng-if="btn.kname == '交通'"></i>
+                        <i class="fa fa-train" ng-if="btn.kname == '轨道'"></i>
+                        <i class="fa fa-shopping-bag" ng-if="btn.kname == '商业'"></i>
+                        <i class="fa fa-graduation-cap" ng-if="btn.kname == '教育'"></i>
+                        <i class="fa fa-medkit" ng-if="btn.kname == '医疗'"></i>
+                        <i class="fa fa-tree" ng-if="btn.kname == '景观'"></i>
+                        &nbsp;
+                        <span ng-bind="btn.kname"></span>
+                    </button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item" ng-repeat="img in imgMean track by $index" ng-class="{active: $index === actindex}" ng-if="img.url != ''">
+                        <img ng-src="[{img.url}]" alt="" class="w-100" height="[{imgheight}]"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="plotsjs" role="tabpanel" aria-labelledby="nav-plotsjs-tab">
+            <div ng-bind-html="showjsHtml" class="bg-white scry" id="showjsHtml"></div>
+        </div>
+        <div class="tab-pane fade" id="plotsser" role="tabpanel" aria-labelledby="nav-plotsser-tab" style="background-color: #eee">
+            <nav class="navbar" style="height: 42px; background-color: #a20000">
+                <a class="navbar-brand font-weight-bold font-15" href="#" style="color: #ffffff;">
+                    <span ng-bind="Plotsinfoservice_name|cut:true:20:'...'"></span>
+                </a>
+            </nav>
+            <div class="text-center nav" style="border-bottom: 1px solid #dc3545; flex-wrap: nowrap; z-index:999999999; background-color: #eee" role="tablist" id="navContent">
+                <a class="nav-link active p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-all-tab" data-toggle="tab" href="#all" ng-click="getServices()">
+                    <span class="align-middle font-13">全部</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-gh-tab" data-toggle="tab" href="#gh" ng-click="getServicesType('规划')">
+                    <span class="align-middle font-13">规划</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-zj-tab" data-toggle="tab" href="#zj" ng-click="getServicesType('住建')">
+                    <span class="align-middle font-13">住建</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-jy-tab" data-toggle="tab" href="#jy" ng-click="getServicesType('教育')">
+                    <span class="align-middle font-13">教育</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-sz-tab" data-toggle="tab" href="#sz" ng-click="getServicesType('市政')">
+                    <span class="align-middle font-13">市政</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-rf-tab" data-toggle="tab" href="#rf" ng-click="getServicesType('人防')">
+                    <span class="align-middle font-13">人防</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-xf-tab" data-toggle="tab" href="#xf" ng-click="getServicesType('消防')">
+                    <span class="align-middle font-13">消防</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-sw-tab" data-toggle="tab" href="#sw" ng-click="getServicesType('税务')">
+                    <span class="align-middle font-13">税务</span>
+                </a>
+                <a class="nav-link p-0" style="width: 11.111%; height: 30px; line-height: 30px" id="nav-cz-tab" data-toggle="tab" href="#cz" ng-click="getServicesType('财政')">
+                    <span class="align-middle font-13">财政</span>
+                </a>
+            </div>
+            <div class="tab-content scry" id="tabheight">
+                <div class="tab-pane fade show active">
+                    <div class="card border-right-0 border-left-0 border-top-0 rounded-0" ng-repeat="i in Plotsinfoservice_list" style="background-color: #eee">
+                        <div class="card-body p-2">
+                            <h5 class="card-title">
+                               <!-- <i class="fa fa-link"></i>&nbsp;-->
+                                <span ng-bind="i.sertitle" style="color: #333333;"></span>
+                            </h5>
+                            <button class="btn btn-outline-secondary btn-sm copybtn" data-clipboard-text="[{i.serurl}]" style="padding: 2px"><i class="fa fa-copy"></i>&nbsp;复制链接</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="plotsdh" role="tabpanel" aria-labelledby="nav-plotsdh-tab">
+            <div class="embed-responsive embed-responsive-4by3">
+                <iframe class="embed-responsive-item" ng-src="[{plostpain}]" scrolling="no"></iframe>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="plotslt" role="tabpanel" aria-labelledby="nav-plotslt-tab">
+            <div class="embed-responsive embed-responsive-4by3">
+                <iframe class="embed-responsive-item" ng-src="[{letourMapurl}]" scrolling="no"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-bottom text-center nav" style="border-top: 1px solid #eeeeee; flex-wrap: nowrap; z-index:999999999; background-color: #fff" role="tablist"  id="navbottom">
+        <a class="nav-link p-0 navWidth mt-1" id="nav-plotsmap-tab" data-toggle="tab" href="#plotsmap" ng-if="navOnOff.UperMapCheack">
+            <span class="align-middle font-12">
+                <img th:src="@{images/1.svg}" alt="" width="30px">
+                <br>全景地图</span>
+        </a>
+        <a class="nav-link p-0 navWidth mt-1" id="nav-plotsys-tab" data-toggle="tab" href="#plotsys" ng-if="navOnOff.PlotsYsCheack">
+            <span class="align-middle font-12">
+                <img th:src="@{images/2.svg}" alt="" width="30px">
+                <br>区位优势</span>
+        </a>
+        <a class="nav-link p-0 navWidth mt-1" id="nav-plotsjs-tab" data-toggle="tab" href="#plotsjs" ng-if="navOnOff.PlotsJsCheack">
+            <span class="align-middle font-12">
+                <img th:src="@{images/3.svg}" alt="" width="30px">
+                <br>地块介绍</span>
+        </a>
+        <a class="nav-link p-0 navWidth mt-1" id="nav-plotsser-tab" data-toggle="tab" href="#plotsser" ng-if="navOnOff.ServiceCheack" ng-click="getServices()">
+            <span class="align-middle font-12">
+                <img th:src="@{images/4.svg}" alt="" width="30px">
+                <br>服务</span>
+        </a>
+        <a class="nav-link p-0 navWidth mt-1" id="nav-plotsdh-tab" data-toggle="tab" href="#plotsdh" ng-if="navOnOff.MapPainCheack">
+            <span class="align-middle font-12">
+                <img th:src="@{images/5.svg}" alt="" width="30px">
+                <br>地块定位</span>
+        </a>
+        <a class="nav-link p-0 navWidth mt-1" id="nav-plotslt-tab" data-toggle="tab" href="#plotslt" ng-if="navOnOff.LetourCheack">
+            <span class="align-middle font-12">
+                <img th:src="@{images/6.svg}" alt="" width="30px">
+                <br>乐游</span>
+        </a>
+    </div>
+</div>
+<div th:include="common::models"></div>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    document.write("<script type='text/javascript' src='/javascript/jsfile/plotsinfo.js?"+ Math.random() + "'></scr"+"ipt>");
+    /*]]>*/
+</script>
+</body>
+</html>
+
+

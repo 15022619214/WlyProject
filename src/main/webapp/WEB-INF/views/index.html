@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::wly_head(title='')"></head>
+<body ng-app="Angular" ng-controller="indexController">
+<div class="container-fluid">
+    <!--欢迎图-->
+    <div id="opacity_img" ng-if="hasPoID">
+        <img ng-src="[{indexlogo}]" alt="" class="img-fluid">
+    </div>
+    <div class="clk_btn" ng-if="douclk">
+        <span><i class="fa fa-hand-pointer-o"></i>&nbsp;双击还原</span>
+    </div>
+    <!--<div class="w-100 h-100 fixed-top" style="background-color: rgba(0,0,0,0.5)" ng-if="bacmac === 1"></div>-->
+	<!--<div class="card text-center fixed-top istrfrom shadow-sm rounded">-->
+	  <!--<div class="card-body scry transfr">-->
+          <!--<div class="row">-->
+              <!--<div class="mt-4 w-50 col-sm-6" ng-repeat="info in pobjects" ng-click="choseinfo(info.id)">-->
+                  <!--<div class="card">-->
+                      <!--<img ng-src="[{info.poimgurl}]" class="card-img-top" alt="..." height="100px">-->
+                      <!--<div class="card-body">-->
+                          <!--<h5 class="card-title font-weight-bold" ng-bind="info.poname"></h5>-->
+                      <!--</div>-->
+                  <!--</div>-->
+              <!--</div>-->
+          <!--</div>-->
+	  <!--</div>-->
+	  <!--<div class="card-footer text-muted bg-white">-->
+	    	<!--<span ng-if="openmean === 1" ng-click="showMean(0)"><i class="fa fa-chevron-down"></i>&nbsp;<span>其他项目</span></span>-->
+	    	<!--<span ng-if="openmean === 0" ng-click="showMean(1)"><i class="fa fa-chevron-up"></i>&nbsp;<span>关闭</span></span>-->
+	  <!--</div>-->
+	<!--</div>-->
+    <!--地块列表-->
+    <div class="bg-white" ng-if="ishowCon">
+        <div id="imgBs" class="overflow-hidden mb-0">
+            <img ng-src="[{indeximgUrl}]" class="img-fluid position-relative" width="100%" id="imgft">
+        </div>
+        <ul class="list-group list-group-flush bg-white border-0" ng-repeat="i1 in Plotsobjects_info">
+            <li class="list-group-item border-0" ng-class="{
+                jdcb_title:$index==0,
+                syzh_title:$index==1,
+                whly_title:$index==2,
+                xzzc_title:$index==3
+            }">
+                <span style="letter-spacing: 2px" class="font-15 text-white">
+                    <i class="fa fa-bars"></i>
+                    <span ng-bind="i1.Plotsclassify_name" class="font-weight-bold"></span>
+                </span>
+            </li>
+            <li class="list-group-item border-0" ng-repeat="i2 in i1.Plots_list" ng-class="{
+                jdcb_even: $parent.$index==0 && !$even,jdcb_odd: $parent.$index==0 && !$odd,
+                syzh_even: $parent.$index==1 && !$even,syzh_odd: $parent.$index==1 && !$odd,
+                whly_even: $parent.$index==2 && !$even,whly_odd: $parent.$index==2 && !$odd,
+                xzzc_even: $parent.$index==3 && !$even,xzzc_odd: $parent.$index==3 && !$odd
+            }">
+                <a href="javascript:" class=" text-white text-decoration-none font-13" ng-click="plotsinfo(i2.id, i2.plots)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="fa fa-location-arrow"></i>&nbsp;&nbsp;
+                            <span ng-bind="i2.plots"></span>
+                        </span>
+                        <span>
+                            <i class="fa fa-chevron-right"></i>
+                        </span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div th:include="common::backshare" th:if="${session.SPRING_SECURITY_CONTEXT!=null and #strings.contains(session.SPRING_SECURITY_CONTEXT.Authentication.Authorities,'分享')}"></div>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    document.write("<script type='text/javascript' src='/javascript/jsfile/index.js?"+ Math.random() + "'></scr"+"ipt>");
+    /*]]>*/
+</script>
+</body>
+</html>
+
+

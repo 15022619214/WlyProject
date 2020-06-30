@@ -1,0 +1,7 @@
+<meta charset="utf-8" >
+
+<ul class="pagination pagination-sm" style="margin: -11px 0;"  ng-if="pageList.length!=1">
+  <li ng-click="Previous()"  ng-if="selPage!=1"><a href="#">&laquo;</a></li>
+  <li ng-class="{'active':isActivePage(page),'':!isActivePage(page)}"  ng-repeat="page in pageList" ng-click="selectPage(page)"><a href="#">[{page}]</a></li>
+  <li ng-click="Next()" ng-if="selPage!=pages"><a href="#">&raquo;</a></li>
+</ul>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="wly_head(title)">
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!--css-->
+    <link rel="stylesheet" th:href="@{/javascript/Bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/javascript/Bootstrap/css/bootstrap-datetimepicker.min.css}"/>
+    <link rel="stylesheet" th:href="@{/javascript/Bootstrap/css/font-awesome.min.css}"/>
+    <link rel="Shortcut Icon" th:href="@{/images/bitbug_favicon.ico}" type="image/x-icon"/>
+    <script  type="text/javascript">
+        /*<![CDATA[*/
+        document.write("<l"+"ink rel='stylesheet' type='text/css' href='/style/style.css?"+Math.random()+"'/>");
+        /*]]>*/
+    </script>
+    <!--js-->
+    <script th:src="@{/javascript/js/jquery.min.js}"></script>
+    <script th:src="@{/javascript/Angularjs/angular.js}"></script>
+    <script th:src="@{/javascript/Angularjs/angularjs_module.js}"></script>
+    <script th:src="@{/javascript/Bootstrap/js/popper.min.js}"></script>
+    <script th:src="@{/javascript/Bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/javascript/Bootstrap/js/bootstrap-datetimepicker.min.js}"></script>
+    <script th:src="@{/javascript/Bootstrap/js/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <script th:src="@{/javascript/js/clipboard.js}"></script>
+    <script th:src="@{/javascript/js/hammer.js}"></script>
+</head>
+<body>
+<div th:fragment="nav">
+    <nav class="navbar navbar-expand-lg shadow bg-dark navbar-light fixed-top">
+        <a class="navbar-brand font-weight-bold font-15 text-warning" href="#">
+            <i class="fa fa-cogs"></i>&nbsp;土地推介系统[后台管理]V1.0
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <div class="form-inline my-2 my-lg-0 font-12">
+                <span class="font-weight-bold text-warning">
+                    您好！&nbsp;<i class="fa fa-user-circle"></i>&nbsp;<span th:text="${session.Userinfo.realname}"></span>
+                </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a th:href="@{/logout}" class="font-weight-bold text-danger text-decoration-none">
+                    <i class="fa fa-window-close"></i>&nbsp;退出
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="loading">
+	    <div class="d-flex justify-content-center" id="loadingDiv">
+		  <div class="spinner-grow text-dark" role="status">
+		      <span class="sr-only">Loading...</span>
+		  </div>
+		  <div class="spinner-grow text-dark" role="status">
+		      <span class="sr-only">Loading...</span>
+		  </div>
+		  <div class="spinner-grow text-dark" role="status">
+		      <span class="sr-only">Loading...</span>
+		  </div>
+		  <div class="spinner-grow text-dark" role="status">
+		      <span class="sr-only">Loading...</span>
+		  </div>
+		  <div class="spinner-grow text-dark" role="status">
+		      <span class="sr-only">Loading...</span>
+		  </div>
+		  <div class="spinner-grow text-dark" role="status">
+		      <span class="sr-only">Loading...</span>
+		  </div>
+		</div>
+    </div>
+</div>
+
+<div th:fragment="backshare">
+    <button class="btn btn-outline-secondary" style="position: fixed;right: 10px;top: 10px; z-index: 999999999999999" onclick="backshare()">返回分享列表</button>
+    <script>
+        function backshare(){
+            window.location.href = "/plotsshare"
+        }
+    </script>
+</div>
+<div th:fragment="models">
+    <div class="modal fade bd-example-modal-lg" id="index_info" tabindex="0" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-plus-square"></i>&nbsp;
+                        <span ng-if="indexedit === 1">新增项目</span>
+                        <span ng-if="indexedit === 0">修改项目</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">
+                        	<span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;项目名称</span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="poname"/>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button class="btn btn-sm btn-primary" ng-click="upImagelogo()">上传展示图</button>
+                            </div>
+                            <div class="form-group">
+                                <label for="">
+	                    	<span class="font-weight-bold">
+	                    		<i class="fa fa-picture-o"></i>&nbsp;展示图缩略图
+	                    	</span>
+                                </label>
+                                <br />
+                                <img ng-src="[{poimgurllogo}]" alt="" class="img-thumbnail" style="height: 400px"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button class="btn btn-sm btn-primary" ng-click="upImage()">上传项目首图</button>
+                            </div>
+                            <div class="form-group">
+                                <label for="">
+	                    	<span class="font-weight-bold">
+	                    		<i class="fa fa-picture-o"></i>&nbsp;项目首图缩略图
+	                    	</span>
+                                </label>
+                                <br />
+                                <img ng-src="[{poimgurl}]" alt="" class="img-thumbnail" width="400px"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="close()">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveinfo()" ng-if="indexedit === 1">确认保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editinfo(itemid)" ng-if="indexedit === 0">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal fade bd-example-modal-sm" id="sys_info" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-exclamation-triangle"></i>&nbsp;
+                        <span>提示信息</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                	<span ng-bind="sys_ifnos"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade bd-example-modal-sm" id="sys_info_btn" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-exclamation-triangle"></i>&nbsp;
+                        <span>提示信息</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                	<span ng-bind="sys_ifnos_btn"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="trashAll(trashid)">确认全部删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="pc_info" tabindex="0" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-plus-square"></i>&nbsp;
+                        <span ng-if="pcedit === 1">新增分类</span>
+                        <span ng-if="pcedit === 0">修改分类</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">
+                        	<span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;分类名称</span>
+                        </label>
+                        <!--<input type="text" class="form-control" ng-model="pcname"/>-->
+                        <select class="form-control" ng-model="pcname">
+                            <option value="净地储备">净地储备</option>
+                            <option value="商业综合">商业综合</option>
+                            <option value="文化旅游">文化旅游</option>
+                            <option value="闲置资产盘活">闲置资产盘活</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="closepc()">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="savepcinfo()" ng-if="pcedit === 1">确认保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editpcinfo(pctemid)" ng-if="pcedit === 0">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="pl_info" tabindex="0" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-plus-square"></i>&nbsp;
+                        <span ng-if="pledit === 1">新增地块</span>
+                        <span ng-if="pledit === 0">修改地块</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">
+                        	<span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;地块名称</span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="plname"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="closepl()">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveplinfo(plid)" ng-if="pledit === 1">确认保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editplinfo(pltemid)" ng-if="pledit === 0">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="service_name" tabindex="0" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-plus-square"></i>&nbsp;
+                        <span>顶部标题</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">
+                            <span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;顶部标题</span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="serTopname"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="closeserT()">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveserT(serTid)">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="service_info" tabindex="0" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-plus-square"></i>&nbsp;
+                        <span ng-if="seredit === 1">新增服务</span>
+                        <span ng-if="seredit === 0">修改服务</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">
+                            <span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;服务标题</span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="sername"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="">
+                            <span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;服务链接</span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="serline"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="">
+                            <span class="font-weight-bold"><i class="fa fa-file"></i>&nbsp;服务分类</span>
+                        </label>
+                        <select class="form-control" ng-model="sertype">
+                            <option value="规划">规划</option>
+                            <option value="住建">住建</option>
+                            <option value="教育">教育</option>
+                            <option value="市政">市政</option>
+                            <option value="人防">人防</option>
+                            <option value="消防">消防</option>
+                            <option value="税务">税务</option>
+                            <option value="财政">财政</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="closeSer()">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveSerinfo(serid)" ng-if="seredit === 1">确认保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editSerinfo(sertemid)" ng-if="seredit === 0">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="MapPain" tabindex="0" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-warning">
+                        <i class="fa fa-plus-square"></i>&nbsp;
+                        <span>地点选择</span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <iframe id="mapPage" width="100%" height="600px" frameborder=0
+                            src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=WBVBZ-N7TRU-FMJV5-4YTU4-JOQEF-DOBBL&referer=myapp">
+                    </iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="closeMapPain()">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveMapPain()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
