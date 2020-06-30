@@ -6,52 +6,7 @@ A.controller("plotsadminController", ["$scope", "$http", "$timeout","$filter", f
     var _editor;
     var _editorlogo;
     $(function () {
-        $scope.getAlllplots("")
-        _editor = UE.getEditor('upload_ue',{
-        	zIndex:1500
-        });
-        _editor.ready(function () {
-            //设置编辑器不可用
-            //_editor.setDisabled();
-            //隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
-            _editor.hide();
-            //侦听图片上传
-            _editor.addListener('beforeinsertimage', function (t, arg) {
-                //将地址赋值给相应的input,只去第一张图片的路径
-                $scope.poimgurl = arg[0].src
-                $scope.poimgurlv = arg[0].src
-                $scope.$apply()
-                //图片预览
-            })
-            //侦听文件上传，取上传文件列表中第一个上传的文件的路径
-            _editor.addListener('afterUpfile', function (t, arg) {
-                $scope.poimgurlv = _editor.options.filePath + arg[0].url;
-                $scope.$apply()
-            })
-        });
-
-        _editorlogo = UE.getEditor('upload_logo',{
-            zIndex:1500
-        });
-        _editorlogo.ready(function () {
-            //设置编辑器不可用
-            //_editor.setDisabled();
-            //隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
-            _editorlogo.hide();
-            //侦听图片上传
-            _editorlogo.addListener('beforeinsertimage', function (t, arg) {
-                //将地址赋值给相应的input,只去第一张图片的路径
-                $scope.poimgurllogo = arg[0].src
-                $scope.poimgurlogo = arg[0].src
-                $scope.$apply()
-                //图片预览
-            })
-            //侦听文件上传，取上传文件列表中第一个上传的文件的路径
-            _editorlogo.addListener('afterUpfile', function (t, arg) {
-                $scope.poimgurlogo = _editorlogo.options.filePath + arg[0].url;
-                $scope.$apply()
-            })
-        });
+        editor()
     })
     
 
@@ -67,7 +22,7 @@ A.controller("plotsadminController", ["$scope", "$http", "$timeout","$filter", f
             $scope.Plotsobjects_info = res.data.Plotsobjects_info
             $timeout(function(){
                 $(".loading").addClass("invisible")
-            },5000)
+            },1000)
         })
     }
 
@@ -315,4 +270,56 @@ A.controller("plotsadminController", ["$scope", "$http", "$timeout","$filter", f
     		}
     	})
 	}
+
+	function editor() {
+        _editor = UE.getEditor('upload_ue',{
+            zIndex:1500
+        });
+        _editor.ready(function () {
+            //设置编辑器不可用
+            //_editor.setDisabled();
+            //隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+            _editor.hide();
+            //侦听图片上传
+            _editor.addListener('beforeinsertimage', function (t, arg) {
+                //将地址赋值给相应的input,只去第一张图片的路径
+                $scope.poimgurl = arg[0].src
+                $scope.poimgurlv = arg[0].src
+                $scope.$apply()
+                //图片预览
+            })
+            //侦听文件上传，取上传文件列表中第一个上传的文件的路径
+            _editor.addListener('afterUpfile', function (t, arg) {
+                $scope.poimgurlv = _editor.options.filePath + arg[0].url;
+                $scope.$apply()
+            })
+            editorlogo()
+        });
+    }
+
+    function editorlogo() {
+        _editorlogo = UE.getEditor('upload_logo',{
+            zIndex:1500
+        });
+        _editorlogo.ready(function () {
+            //设置编辑器不可用
+            //_editor.setDisabled();
+            //隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+            _editorlogo.hide();
+            //侦听图片上传
+            _editorlogo.addListener('beforeinsertimage', function (t, arg) {
+                //将地址赋值给相应的input,只去第一张图片的路径
+                $scope.poimgurllogo = arg[0].src
+                $scope.poimgurlogo = arg[0].src
+                $scope.$apply()
+                //图片预览
+            })
+            //侦听文件上传，取上传文件列表中第一个上传的文件的路径
+            _editorlogo.addListener('afterUpfile', function (t, arg) {
+                $scope.poimgurlogo = _editorlogo.options.filePath + arg[0].url;
+                $scope.$apply()
+            })
+            $scope.getAlllplots("")
+        });
+    }
 }])
