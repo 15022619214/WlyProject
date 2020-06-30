@@ -130,7 +130,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
             }
         }).then(function (res) {
             $(".Cardheight").css("height",document.documentElement.clientHeight - 160)
-            console.log(res.data)
 			if(res.data.Plotsobjects_info.length > 0){
 				$scope.Plotsobjects_info = res.data.Plotsobjects_info;
                 for (var i = 0; i < $scope.Plotsobjects_info.length; i++) {
@@ -168,11 +167,9 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
             $scope.getServices(pid)
             $scope.getBottomBtn(pid)
     		if(res.data.plotsinfo!=null){
-                console.log("plotsinfo",res.data.plotsinfo)
                 $scope.img.tipImg = res.data.plotsinfo.plosttipimg
     			if(res.data.plotsinfo_map.length > 0){
 					var p_map = res.data.plotsinfo_map
-                    console.log("p_map",p_map)
 					for (var i = 0; i < p_map.length; i++) {
 						var result = {
 							index: p_map[i].mapindex,
@@ -201,7 +198,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
 				}
 				if(res.data.plotsinfo_img.length > 0){
 					var p_img = res.data.plotsinfo_img
-                    console.log("p_img",p_img)
 					for (var i = 0; i < p_img.length; i++) {
 						var result = {
 							index: p_img[i].imgindex,
@@ -362,7 +358,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
     }
     
     $scope.trashAll = function(id){
-    	console.log(id)
     	$http({
     		url: "/api/trashpl",
     		method: "POST",
@@ -433,7 +428,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
 
     /*导航开关*/
     $scope.navCk = function(index, $event){
-        console.log($event.target.checked)
         switch (index){
             case 0:
                 $scope.navOnOff.UperMapCheack = $event.target.checked;
@@ -464,7 +458,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
                 id:id,
             }
         }).then(function (res) {
-            console.log(res.data);
             if(res.data.plotsinfonav != null){
                 $scope.navOnOff = {
                     UperMapCheack: Boolen(res.data.plotsinfonav.uperMapCheack),
@@ -507,7 +500,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
 	}
 
 	function lefremoveMap(index) {
-	    console.log(index)
 		switch (index) {
 			case 0:
 				$scope.map.allMap = "";
@@ -668,7 +660,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
         // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
         var loc = event.data;
         if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
-            console.log('location', loc);
             h_lat = loc.latlng.lat;
             h_lng = loc.latlng.lng;
             h_title = loc.poiaddress;
@@ -679,7 +670,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
     $scope.saveMapPain = function(){
         var url = "https://apis.map.qq.com/tools/poimarker?type=0&marker=coord:" + h_lat + "," + h_lng +
             ";title:"+ h_title +";addr:"+ h_addr +"&key=WBVBZ-N7TRU-FMJV5-4YTU4-JOQEF-DOBBL&referer=myapp"
-        console.log(url)
         $scope.pain.PainMapurl = url;
         $scope.pain.painUrl = $sce.trustAsResourceUrl(url);
         $scope.pain.PainMap = h_title
@@ -695,7 +685,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
 
     $scope.pinBool = false;
     $scope.editPain = function(map){
-        console.log(map)
 	    $.ajax({
 	        type: "GET",
 	        url: "https://apis.map.qq.com/ws/geocoder/v1",
@@ -760,7 +749,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
                 infoid:id,
             }
         }).then(function (res) {
-            console.log(res)
             $scope.serTopname = res.data.Plotsinfoservice_name;
             $scope.Plotsinfoservice_name = res.data.Plotsinfoservice_name;
             $scope.Plotsinfoservice_list = res.data.Plotsinfoservice_list;
@@ -807,7 +795,6 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
     }
 
     $scope.saveserT = function(id){
-        console.log(id)
         if($scope.serTopname == ""){
             $scope.sys_ifnos = "请输入标题"
             $("#sys_info").modal('toggle')
@@ -934,15 +921,15 @@ A.controller("plotsinfoadminController", ["$scope", "$http", "$timeout","$filter
 
     /*保存信息*/
     $scope.savePlotsinfo = function(){
-    	console.info("ID",$scope.focus)
-        console.info("开关",$scope.navOnOff)
-    	console.info("全景",uperMaplist)
-        console.log("固定",$scope.img.tipImg)
-    	console.info("优势",ysImglist)
-    	console.info("介绍",$scope.plotsjs)
-        console.info("定位",$scope.pain.PainMap)
-    	console.info("定位",$scope.pain.PainMapurl)
-        console.info("乐游",$scope.tour.letourMap)
+        // console.info("ID",$scope.focus)
+        // console.info("开关",$scope.navOnOff)
+        // console.info("全景",uperMaplist)
+        // console.log("固定",$scope.img.tipImg)
+        // console.info("优势",ysImglist)
+        // console.info("介绍",$scope.plotsjs)
+        // console.info("定位",$scope.pain.PainMap)
+        // console.info("定位",$scope.pain.PainMapurl)
+        // console.info("乐游",$scope.tour.letourMap)
     	if($scope.focus== 0){
 			$scope.sys_ifnos = "请选择地块项目";
 			$("#sys_info").modal('toggle');
